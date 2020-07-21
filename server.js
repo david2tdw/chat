@@ -61,6 +61,7 @@ io.on('connection', (socket) => {
         img = usersInfo[i].img
       }
     }
+    // 发给其他人的信息显示在左侧
     socket.broadcast.emit('receiveMsg', {
       name: socket.nickname,
       img: img,
@@ -69,6 +70,7 @@ io.on('connection', (socket) => {
       type: data.type,
       side: 'left', // 信息显示在哪一侧
     })
+    // 发给当前用户的信息显示在右侧
     socket.emit('receiveMsg', {
       name: socket.nickname,
       img: img,
