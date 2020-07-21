@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
       msg: data.msg,
       color: data.color,
       type: data.type,
-      side: 'left',
+      side: 'left', // 信息显示在哪一侧
     })
     socket.emit('receiveMsg', {
       name: socket.nickname,

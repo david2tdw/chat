@@ -101,14 +101,19 @@ $(function () {
     // 发送为图片
     if (obj.type === 'img') {
       $('#messages').append(`
-      <li class="${obj.side}">
-        <img src="${obj.img}" />
-        <div>
-          <span>${obj.name}</span>
-        </div>
-      </li>
+        <li class="${obj.side}">
+          <img src="${obj.img}" />
+          <div>
+            <span>${obj.name}</span>
+            <p style="padding: 0;">${obj.msg}</p>
+          </div>
+        </li>
       `)
-      $('#messages').scrollTop($('#messages')[0].scrollHeight)
+      // 解决图片渲染器高度获取错误的情况（滚动条不滚动）
+      setTimeout(function () {
+        $('#messages').scrollTop($('#messages')[0].scrollHeight)
+      }, 500)
+      
       return
     }
     // 提取文字中的表情加以渲染
@@ -195,4 +200,26 @@ $(function () {
       $('.main').removeClass('shaking')
     }, 500)
   }
+
+  // 用户发送图片
+  $('#file').change(function () {
+    let file = this.files[0] // 上传单张图片
+    let reader = new FileReader()
+
+    // 文件读取出错的时候触发
+    reader.onerror = function () {
+      console.log('读取文件失败，请重试！')
+    }
+    // 读取成功后
+    reader.onload = function () {
+      let src = reader.result // 读取结果
+      let img = `<img class="sendImg" src="${src}"/>`
+      socket.emit('sendMsg', {
+        msg: img,
+        color: color,
+        type: 'img'
+      })
+    }
+    reader.readAsDataURL(file) // 读取为64位
+  })
 })
